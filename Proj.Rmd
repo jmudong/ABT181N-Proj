@@ -1,0 +1,11 @@
+---
+title: "Project"
+output: html_document
+date: "2025-02-12"
+---
+
+```{r}
+library(terra)
+bis <- read.csv("")
+```
+
