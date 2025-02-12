@@ -5,6 +5,27 @@ date: "2025-02-12"
 ---
 
 ```{r}
+library(terra)
+library(tidyverse)
+
+
+bis <- read.csv("Registered_Business_Locations_-_San_Francisco_20250212.csv", sep = ";")
+regex1 <- "POINT \\("
+bis$Business.Location <- gsub(regex1, "", bis$Business.Location)
+bis$Business.Location
+
+regex2 <- "\\)"
+bis$Business.Location <- gsub(regex2, "", bis$Business.Location)
+bis$Business.Location
+
+bis_lonlat <- bis %>%
+  separate(Business.Location, c("lon", "lat"), sep = " ") %>%
+  mutate(lon = as.numeric(lon),
+         lat = as.numeric(lat))
+
+bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
+
+
 
 ```
 
