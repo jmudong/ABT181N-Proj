@@ -6,6 +6,7 @@ date: "2025-02-12"
 
 ```{r}
 library(terra)
-bis <- read.csv("")
+bis <- system.file("Registered_Business_Locations_-_San_Francisco_20250212.csv")
+arhfi
 ```
 
