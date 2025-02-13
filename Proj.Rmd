@@ -27,14 +27,19 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 ```
 
 ```{r Cropping to City Extent}
-v<- vect("geo_export_97a89fa5-6ef3-4683-94e5-c808fea0fc6b.dbf")
+muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
+muni
+v<-vect("geo_export_97a89fa5-6ef3-4683-94e5-c808fea0fc6b.dbf")
 v
 ex <- ext(-122.52, -122.35, 37.63983, 37.82)
 vcrop<- crop(v, ex)
 ```
 
-```{r Plotting Business and City Extent}
+```{r Plotting Business, Muni Stops and City Extent}
 plot(vcrop)
 plot(bisv, add=TRUE, cex=0.1)
+plot(muni, add=TRUE, cex=0.2, col="blue")
 ```
+
+
 
