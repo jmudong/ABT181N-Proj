@@ -29,18 +29,30 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 ```{r Cropping to City Extent}
 muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
-##ex <- ext(-122.52, -122.35, 37.72, 37.82)
+
 newv <- vect("geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
 newv
-count <- terra::extract(newv, bisv, weights= TRUE, fun = length)
-?terra::extract
-##v<- crop(newv, ex)
+
+count <- terra::extract(newv, bisv)
+counts <- sapply(count, length)
+
+noNAcount <- count %>%
+  filter(!is.na(nhood))
+
+neighborhood <- noNAcount%>%
+  group_by(nhood) %>%
+  summarize(point_count = n())
+
+join <- merge(newv, neighborhood, by="nhood")
+
 ```
 
 ```{r Plotting Business, Muni Stops and City Extent}
 plot(newv)
-plot(bisv, add=TRUE, cex=0.1)
-plot(muni, add=TRUE, cex=0.2, col="blue")
+plot(join, "point_count", col = rainbow(50))
+##plot(bisv, add=TRUE, cex=0.1)
+##plot(muni, add=TRUE, cex=0.2, col="blue")
+?plot
 ```
 
 
