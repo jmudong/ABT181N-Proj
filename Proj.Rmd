@@ -29,14 +29,16 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 ```{r Cropping to City Extent}
 muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
-v<-vect("geo_export_97a89fa5-6ef3-4683-94e5-c808fea0fc6b.dbf")
-v
-ex <- ext(-122.52, -122.35, 37.63983, 37.82)
-vcrop<- crop(v, ex)
+##ex <- ext(-122.52, -122.35, 37.72, 37.82)
+newv <- vect("geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
+newv
+count <- terra::extract(newv, bisv, weights= TRUE, fun = length)
+?terra::extract
+##v<- crop(newv, ex)
 ```
 
 ```{r Plotting Business, Muni Stops and City Extent}
-plot(vcrop)
+plot(newv)
 plot(bisv, add=TRUE, cex=0.1)
 plot(muni, add=TRUE, cex=0.2, col="blue")
 ```
