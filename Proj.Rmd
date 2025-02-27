@@ -4,20 +4,21 @@ output: html_document
 date: "2025-02-12"
 ---
 
-```{r Imporing Business Data}
+```{r}
+## Load in packages
 library(terra)
 library(tidyverse)
 library(viridis)
 
+##Transforming longitude and latitude data so that it can be read as a vector 
+##for the businesses data.
 
 bis <- read.csv("Registered_Business_Locations_-_San_Francisco_20250212.csv", sep = ";")
 regex1 <- "POINT \\("
 bis$Business.Location <- gsub(regex1, "", bis$Business.Location)
-bis$Business.Location
 
 regex2 <- "\\)"
 bis$Business.Location <- gsub(regex2, "", bis$Business.Location)
-bis$Business.Location
 
 bis_lonlat <- bis %>%
   separate(Business.Location, c("lon", "lat"), sep = " ") %>%
@@ -28,12 +29,15 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 ```
 
 ```{r Cropping to City Extent}
+## Vectorize Muni data
 muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
 
+## Vectorize San Fransico Neighborhood Data
 newv <- vect("geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
 newv
 
+## Counting the amount of businesses in each neighborhood
 count <- terra::extract(newv, bisv)
 
 noNAcount <- count %>%
@@ -46,6 +50,7 @@ neighborhood <- noNAcount%>%
 join <- merge(newv, neighborhood, by="nhood")
 point_count <- join[["point_count"]]
 
+## Counting the amount of Muni stops in each neighborhood
 muni_count <- terra::extract(newv, muni)
 munistops <- muni_count%>%
   group_by(nhood)%>%
@@ -56,12 +61,18 @@ muni_join <- merge(newv, munistops, by = "nhood")
 
 ```
 
-```{r Plotting Business, Muni Stops and City Extent}
-##plot(newv)
-plot(join, col = viridis(200)[rank(point_count)], legend = TRUE)
+```{r}
+## Plot Muni and Business data
+##plot(join, col = viridis(150)[rank(point_count)], legend = "continuous")
+plot(join, "point_count", breaks= 10, col = rainbow(10), background = "lightblue", 
+     main= "Businesses in Each Neighborhood", axes=FALSE)
+text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
+lines(newv, col="gray28")
+north(xy= "topleft", type=2, cex= 0.8)
+sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
+   scaleby=100, lonlat=NULL, cex=0.5, below = "km")
 
-##plot(muni, add=TRUE, cex=0.2, col="blue")
-plot(muni_join, "munipoint_count", breaks = 8, col = rainbow(8))
+##plot(muni_join, "munipoint_count", breaks = 8, col = rainbow(8))
 ```
 
 
