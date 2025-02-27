@@ -68,7 +68,7 @@ busmuni_join <- merge(muni_join, join, by = "nhood")
 
 ## Businesses in Each Neighborhood Map
 plot(join, "point_count", breaks= 9, col = rainbow(9), background = "lightblue", 
-     main= "Businesses in Each SF Neighborhood", axes=FALSE)
+     main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
 north(xy= "topleft", type=2, cex= 0.8)
@@ -77,7 +77,7 @@ sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000),
 
 ## Muni Stops in Each Neighborhood Map
 plot(muni_join, "munipoint_count", breaks = 9, col = rainbow(9), background = "lightblue", 
-     main= "Muni Stops in Each SF Neighborhood", axes=FALSE)
+     main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
 north(xy= "topleft", type=2, cex= 0.8)
@@ -97,10 +97,12 @@ barplot(height = munistops$munipoint_count, names.arg = munistops$nhood,
   xlab = "Neighborhood", ylab = "Number of Muni Stops",
   col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
 ```
+
 ```{r}
 ##Number of Muni Stops vs Number of Businesses in San Francisco
 plot(busmuni_join$munipoint_count, busmuni_join$point_count,
-    main = "Number of Muni Stops vs Number of Businesses in San Francisco",
+    main = "Number of Muni Stops vs Number of Businesses in San Francisco", 
+    cex.main = 1.2,
     xlab = "Number of Muni Stops", ylab = "Number of Businesses",
     pch=16, cex=1, col='blue'
     )
