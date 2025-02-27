@@ -64,15 +64,39 @@ muni_join <- merge(newv, munistops, by = "nhood")
 ```{r}
 ## Plot Muni and Business data
 ##plot(join, col = viridis(150)[rank(point_count)], legend = "continuous")
-plot(join, "point_count", breaks= 10, col = rainbow(10), background = "lightblue", 
+
+## Businesses in Each Neighborhood Map
+plot(join, "point_count", breaks= 9, col = rainbow(9), background = "lightblue", 
      main= "Businesses in Each Neighborhood", axes=FALSE)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
-lines(newv, col="gray28")
+lines(newv, col="black")
 north(xy= "topleft", type=2, cex= 0.8)
 sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
    scaleby=100, lonlat=NULL, cex=0.5, below = "km")
 
-##plot(muni_join, "munipoint_count", breaks = 8, col = rainbow(8))
+## Muni Stops in Each Neighbot Map
+plot(muni_join, "munipoint_count", breaks = 9, col = rainbow(9), background = "lightblue", 
+     main= "Muni Stops in Each Neighborhood", axes=FALSE)
+text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
+lines(newv, col="black")
+north(xy= "topleft", type=2, cex= 0.8)
+sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
+   scaleby=100, lonlat=NULL, cex=0.5, below = "km")
+```
+```{r}
+##Bar Plot indicating the number of businesses in each neighborhood
+barplot(height = neighborhood$point_count, names.arg = neighborhood$nhood,
+  main = "Number of Businesses in Each Neighborhood",
+  xlab = "Neighborhood",
+  ylab = "Number of Businesses",
+  col = "navy", cex.names =0.5, las = 2, cex.axis = 0.7)
+
+####Bar Plot indicating the number of muni stops in each neighborhood
+barplot(height = munistops$munipoint_count, names.arg = munistops$nhood,
+  main = "Number of Muni Stops in Each Neighborhood",
+  xlab = "Neighborhood",
+  ylab = "Number of Muni Stops",
+  col = "navy", cex.names =0.5, las = 2, cex.axis = 0.7)
 ```
 
 
