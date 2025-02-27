@@ -87,15 +87,13 @@ sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000),
 ##Bar Plot indicating the number of businesses in each neighborhood
 barplot(height = neighborhood$point_count, names.arg = neighborhood$nhood,
   main = "Number of Businesses in Each Neighborhood",
-  xlab = "Neighborhood",
-  ylab = "Number of Businesses",
+  xlab = "Neighborhood", ylab = "Number of Businesses",
   col = "navy", cex.names =0.5, las = 2, cex.axis = 0.7)
 
-####Bar Plot indicating the number of muni stops in each neighborhood
+##Bar Plot indicating the number of muni stops in each neighborhood
 barplot(height = munistops$munipoint_count, names.arg = munistops$nhood,
   main = "Number of Muni Stops in Each Neighborhood",
-  xlab = "Neighborhood",
-  ylab = "Number of Muni Stops",
+  xlab = "Neighborhood", ylab = "Number of Muni Stops",
   col = "navy", cex.names =0.5, las = 2, cex.axis = 0.7)
 ```
 
