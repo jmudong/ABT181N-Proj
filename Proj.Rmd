@@ -7,6 +7,7 @@ date: "2025-02-12"
 ```{r Imporing Business Data}
 library(terra)
 library(tidyverse)
+library(viridis)
 
 
 bis <- read.csv("Registered_Business_Locations_-_San_Francisco_20250212.csv", sep = ";")
@@ -34,7 +35,6 @@ newv <- vect("geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
 newv
 
 count <- terra::extract(newv, bisv)
-counts <- sapply(count, length)
 
 noNAcount <- count %>%
   filter(!is.na(nhood))
@@ -44,15 +44,24 @@ neighborhood <- noNAcount%>%
   summarize(point_count = n())
 
 join <- merge(newv, neighborhood, by="nhood")
+point_count <- join[["point_count"]]
+
+muni_count <- terra::extract(newv, muni)
+munistops <- muni_count%>%
+  group_by(nhood)%>%
+  summarize(munipoint_count = n())
+
+muni_join <- merge(newv, munistops, by = "nhood")
+
 
 ```
 
 ```{r Plotting Business, Muni Stops and City Extent}
-plot(newv)
-plot(join, "point_count", col = rainbow(50))
-##plot(bisv, add=TRUE, cex=0.1)
+##plot(newv)
+plot(join, col = viridis(200)[rank(point_count)], legend = TRUE)
+
 ##plot(muni, add=TRUE, cex=0.2, col="blue")
-?plot
+plot(muni_join, "munipoint_count", breaks = 8, col = rainbow(8))
 ```
 
 
