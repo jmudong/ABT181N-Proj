@@ -9,7 +9,19 @@ date: "2025-02-12"
 library(terra)
 library(tidyverse)
 library(viridis)
+```
 
+```{r}
+## Unzipping files
+unzip("Data.zip")
+dir.create("muni", showWarnings = FALSE)
+dir.create("nhood", showWarnings = FALSE)
+unzip("MUNI.zip", exdir="muni")
+unzip("nhood.zip", exdir="nhood")
+```
+
+
+```{r}
 ##Transforming longitude and latitude data so that it can be read as a vector 
 ##for the businesses data.
 
@@ -30,11 +42,11 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 
 ```{r}
 ## Vectorize Muni data
-muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
+muni<- vect("muni/geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
 
 ## Vectorize San Fransico Neighborhood Data
-newv <- vect("geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
+newv <- vect("nhood/geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
 newv
 
 ## Counting the amount of businesses in each neighborhood
@@ -108,6 +120,15 @@ plot(busmuni_join$munipoint_count, busmuni_join$point_count,
     )
 abline(a= busmuni_join$point_count, b = busmuni_join$munipoint_count, col='red',
        lwd = 1)
+```
+
+
+```{r}
+##### RUN THIS BEFORE PUSHING TO GITHUB
+##### TO AVOID ACCIDENTALLY SENDING BIG FILES
+file.remove("Registered_Business_Locations_-_San_Francisco_20250212.csv")
+unlink("muni", recursive = T)
+unlink("nhood", recursive = T)
 ```
 
 
