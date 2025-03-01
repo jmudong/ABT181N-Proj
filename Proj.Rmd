@@ -46,7 +46,7 @@ muni<- vect("muni/geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
 
 ## Vectorize San Fransico Neighborhood Data
-newv <- vect("nhood/geo_export_674028c8-64b1-47df-a16d-14009ac491a7.dbf")
+newv <- vect("nhood/geo_export_188f3512-6e48-45bc-ad4c-ef55315e7720.dbf")
 newv
 
 ## Counting the amount of businesses in each neighborhood
