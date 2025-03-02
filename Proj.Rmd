@@ -121,6 +121,37 @@ plot(busmuni_join$munipoint_count, busmuni_join$point_count,
 abline(a= busmuni_join$point_count, b = busmuni_join$munipoint_count, col='red',
        lwd = 1)
 ```
+```{r}
+## Checking for outliers
+par(mfrow=c(1, 2))
+boxplot(busmuni_join$munipoint_count, main="Number of MUNI Stops")
+boxplot(busmuni_join$point_count, main="Number of Businesses")
+```
+```{r}
+# Obtain values of outliers
+muniout <- boxplot.stats(busmuni_join$munipoint_count)$out
+busout <- boxplot.stats(busmuni_join$point_count)$out
+# Obtaining indices
+muniout_idx <- which(busmuni_join$munipoint_count %in% muniout)
+busout_idx <- which(busmuni_join$point_count %in% busout)
+outidx <- c(muniout_idx, busout_idx)
+# Removing outliers
+df <- values(busmuni_join)
+dfclean <- df[-outidx, ]
+# Re-plotting boxplots
+par(mfrow=c(1, 2))
+boxplot(dfclean$munipoint_count, main="Number of MUNI Stops")
+boxplot(dfclean$point_count, main="Number of Businesses")
+```
+```{r}
+# Fitting linear regression model
+linearMod <- lm(point_count ~ munipoint_count, data=dfclean) 
+summary(linearMod)
+```
+
+
+
+
 
 
 ```{r}
