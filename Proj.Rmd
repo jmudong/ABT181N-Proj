@@ -4,6 +4,15 @@ output: html_document
 date: "2025-02-12"
 ---
 
+Question: What is the correlation between the number of businesses and Muni stops in San Francisco?
+
+San Francisco is a highly concentrated city with a population of 808,988 people. This city, constructed on a 46.9 square mile area of land, is notorious for its constantly congested highways and traffic. Therefore, instead of driving, people often use public transportation to commute from one place to another. The San Francisco Municipal Railway (Muni) is a widely popular mode of public transportation in San Francisco. Muni is run by the San Francisco Municipal Transportation Agency and is composed of light rail, cable cars, buses, and streetcars. 
+
+The overarching goal of our project is to analyze the relationship between presence of San Francisco Municipal Railway (MUNI) and location of businesses throughout San Francisco. We want to see where relationships between economic growth/decline and MUNI stops exist, and which neighborhoods this relationship is the most prominent in. According to the 2022 Muni Rider Survey, one third of Muni riders use Muni to travel to and from various businesses. Increased traffic in certain neighborhoods due to increases in business, could result in the need for more Muni stops in neighborhoods to relieve traffic congestion. According to the Transit Economic Benefits Study, the highest amount of Muni ridership occurs in neighborhoods of high congestion. We want to see which neighborhoods have the most Muni stops and analyze them for any correlation with the number of businesses established in the neighborhood.
+
+***********Description of the dataset and exploratory data analysis (variable distribution, correlation etc),
+(2 different plots and/or tables plus 3-4 paragraphs)
+
 ```{r}
 ## Load packages
 library(terra)
@@ -96,6 +105,9 @@ north(xy= "topleft", type=2, cex= 0.8)
 sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
    scaleby=100, lonlat=NULL, cex=0.5, below = "km")
 ```
+
+********Map description and discussion
+
 ```{r}
 ##Bar Plot indicating the number of businesses in each neighborhood
 barplot(height = neighborhood$point_count, names.arg = neighborhood$nhood,
@@ -110,6 +122,8 @@ barplot(height = munistops$munipoint_count, names.arg = munistops$nhood,
   col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
 ```
 
+********Plot description and discussion
+
 ```{r}
 ##Number of Muni Stops vs Number of Businesses in San Francisco
 plot(busmuni_join$munipoint_count, busmuni_join$point_count,
@@ -121,12 +135,16 @@ plot(busmuni_join$munipoint_count, busmuni_join$point_count,
 abline(a= busmuni_join$point_count, b = busmuni_join$munipoint_count, col='red',
        lwd = 1)
 ```
+
+********Plot description and discussion
+
 ```{r}
 ## Checking for outliers
 par(mfrow=c(1, 2))
 boxplot(busmuni_join$munipoint_count, main="Number of MUNI Stops")
 boxplot(busmuni_join$point_count, main="Number of Businesses")
 ```
+
 ```{r}
 # Obtain values of outliers
 muniout <- boxplot.stats(busmuni_join$munipoint_count)$out
@@ -143,13 +161,14 @@ par(mfrow=c(1, 2))
 boxplot(dfclean$munipoint_count, main="Number of MUNI Stops")
 boxplot(dfclean$point_count, main="Number of Businesses")
 ```
+
 ```{r}
 # Fitting linear regression model
 linearMod <- lm(point_count ~ munipoint_count, data=dfclean) 
 summary(linearMod)
 ```
 
-
+********Discussion
 
 
 
@@ -162,5 +181,11 @@ unlink("muni", recursive = T)
 unlink("nhood", recursive = T)
 ```
 
+*********Conclusion
+
+References
+Brophy, Jeanne. “2022 Muni Rider Survey.” SFMTA, 6 Feb. 2023, www.sfmta.com/blog/2022-muni-rider-survey. 
+
+SFMTA Citizens Advisory Committee2. “SFMTA.” Transit Economic Benefits Study, 3 Sept. 2015, www.sfmta.com/media/29156/download?inline=.
 
 
