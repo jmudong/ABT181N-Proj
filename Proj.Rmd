@@ -3,6 +3,7 @@ title: "Project"
 output: html_document
 date: "2025-02-12"
 ---
+Jasper Dong and Tosca Wong
 
 Question: What is the correlation between the number of businesses and Muni stops in San Francisco?
 
@@ -85,10 +86,21 @@ busmuni_join <- merge(muni_join, join, by = "nhood")
 
 ```{r}
 ## Plot Muni and Business data
-##plot(join, col = viridis(150)[rank(point_count)], legend = "continuous")
+
+##Picking color palette for Businesses map
+YlOrRd <- RColorBrewer::brewer.pal(n=9, name ="YlOrRd")
+plot(1:10, cex=2, pch= 20, col=YlOrRd)
+print(YlOrRd)
+colors = colorRampPalette(c("#FFEDA0", "#BD0026"))
+
+##Picking color palette for Businesses map
+Purple <- RColorBrewer::brewer.pal(n=9, name ="Purples")
+plot(1:10, cex=2, pch= 20, col=Purple)
+print(Purple)
+colors1 = colorRampPalette(c("#EFEDF5", "#54278F"))
 
 ## Businesses in Each Neighborhood Map
-plot(join, "point_count", breaks= 9, col = rainbow(9), background = "lightblue", 
+plot(join, "point_count", breaks= 10, col = colors(10), background = "lightblue", 
      main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
@@ -97,7 +109,7 @@ sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000),
    scaleby=100, lonlat=NULL, cex=0.5, below = "km")
 
 ## Muni Stops in Each Neighborhood Map
-plot(muni_join, "munipoint_count", breaks = 9, col = rainbow(9), background = "lightblue", 
+plot(muni_join, "munipoint_count", breaks = 10, col = colors1(10), background = "lightblue", 
      main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
