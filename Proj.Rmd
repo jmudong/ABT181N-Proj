@@ -99,7 +99,7 @@ colors1 = colorRampPalette(c("#EFEDF5", "#54278F"))
 
 ## Businesses in Each Neighborhood Map
 plot(join, "point_count", breaks= 10, col = colors(10), background = "lightblue", 
-     main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1)
+     main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1.7)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
 north(xy= "topleft", type=2, cex= 1.2)
@@ -108,7 +108,7 @@ sbar(5, xy=c(-122.5,37.824), type="line", divs=2, labels=c(0,500,1000),
 
 ## Muni Stops in Each Neighborhood Map
 plot(muni_join, "munipoint_count", breaks = 10, col = colors1(10), background = "lightblue", 
-     main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1)
+     main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1.7)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
 north(xy= "topleft", type=2, cex= 1.2)
