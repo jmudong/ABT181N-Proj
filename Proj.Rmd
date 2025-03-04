@@ -84,19 +84,17 @@ busmuni_join <- merge(muni_join, join, by = "nhood")
 
 ```
 
-```{r}
+```{r, fig.height= 16, fig.width= 16}
 ## Plot Muni and Business data
+
+par(mfrow = c(1,2))
 
 ##Picking color palette for Businesses map
 YlOrRd <- RColorBrewer::brewer.pal(n=9, name ="YlOrRd")
-plot(1:10, cex=2, pch= 20, col=YlOrRd)
-print(YlOrRd)
 colors = colorRampPalette(c("#FFEDA0", "#BD0026"))
 
 ##Picking color palette for Businesses map
 Purple <- RColorBrewer::brewer.pal(n=9, name ="Purples")
-plot(1:10, cex=2, pch= 20, col=Purple)
-print(Purple)
 colors1 = colorRampPalette(c("#EFEDF5", "#54278F"))
 
 ## Businesses in Each Neighborhood Map
@@ -104,23 +102,26 @@ plot(join, "point_count", breaks= 10, col = colors(10), background = "lightblue"
      main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
-north(xy= "topleft", type=2, cex= 0.8)
-sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
-   scaleby=100, lonlat=NULL, cex=0.5, below = "km")
+north(xy= "topleft", type=2, cex= 1.2)
+sbar(5, xy=c(-122.5,37.824), type="line", divs=2, labels=c(0,500,1000), 
+   scaleby=100, lonlat=NULL, cex=0.8, below = "km")
 
 ## Muni Stops in Each Neighborhood Map
 plot(muni_join, "munipoint_count", breaks = 10, col = colors1(10), background = "lightblue", 
      main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
-north(xy= "topleft", type=2, cex= 0.8)
-sbar(5, xy=c(-122.5,37.829), type="line", divs=2, labels=c(0,500,1000), 
-   scaleby=100, lonlat=NULL, cex=0.5, below = "km")
+north(xy= "topleft", type=2, cex= 1.2)
+sbar(5, xy=c(-122.5,37.824), type="line", divs=2, labels=c(0,500,1000), 
+   scaleby=100, lonlat=NULL, cex=0.8, below = "km")
 ```
 
 ********Map description and discussion
 
-```{r}
+```{r, fig.height= 4, fig.width= 16}
+
+par(mfrow = c(1,2))
+
 ##Bar Plot indicating the number of businesses in each neighborhood
 barplot(height = neighborhood$point_count, names.arg = neighborhood$nhood,
   main = "Number of Businesses in Each SF Neighborhood",
