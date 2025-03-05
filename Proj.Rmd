@@ -18,6 +18,7 @@ The overarching goal of our project is to analyze the relationship between prese
 ## Load packages
 library(terra)
 library(tidyverse)
+library(ggplot2)
 ```
 
 ```{r}
@@ -180,6 +181,18 @@ boxplot(dfclean$point_count, main="Number of Businesses")
 linearMod <- lm(point_count ~ munipoint_count, data=dfclean) 
 summary(linearMod)
 ```
+
+```{r}
+# Plotting linear relationship between MUNI stops and Businesses
+ggplot(data = dfclean, aes(x = munipoint_count, y = point_count)) +
+  geom_point() +
+  geom_smooth(method='lm', se=FALSE, color = "steelblue") +
+  theme_minimal() +
+  labs(x = 'Number of MUNI Stops', y = 'Number of Businesses',
+       title = 'Linear Regression of MUNI Stops vs. Businesses') +
+  theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) 
+```
+
 
 ********Discussion
 
