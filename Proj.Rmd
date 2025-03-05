@@ -178,9 +178,15 @@ boxplot(dfclean$point_count, main="Number of Businesses")
 
 ```{r}
 # Fitting linear regression model
-linearMod <- lm(point_count ~ munipoint_count, data=dfclean) 
-summary(linearMod)
+lin <- lm(point_count ~ munipoint_count, data=dfclean) 
+linsum <- summary(lin)
+linsum
 ```
+```{r}
+# Obtaining correlation between MUNI Stops and Businesses
+cor(dfclean$munipoint_count, dfclean$point_count)
+```
+
 
 ```{r}
 # Plotting linear relationship between MUNI stops and Businesses
@@ -190,7 +196,9 @@ ggplot(data = dfclean, aes(x = munipoint_count, y = point_count)) +
   theme_minimal() +
   labs(x = 'Number of MUNI Stops', y = 'Number of Businesses',
        title = 'Linear Regression of MUNI Stops vs. Businesses') +
-  theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) 
+  theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) +
+  geom_text(x = 20, y = 7500, 
+            label = paste0("R2 = ", round(linsum$r.squared, 4)))
 ```
 
 
