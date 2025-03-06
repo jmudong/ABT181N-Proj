@@ -119,8 +119,7 @@ The first map visualizes the number of businesses in each San Francisco neighbor
 
 The second map visualizes the number of Muni stops in each San Francisco neighborhood. Neighborhoods with fewer businesses are represented in light purple, while higher numbers of businesses are represented in dark purple. There is a high concentration of Muni Stops in the southwest quadrant of San Francisco.
 
-```{r fig.height= 4, fig.width= 16}
-
+```{r fig.height= 6, fig.width= 16}
 par(mfrow = c(1,2))
 
 ##Bar Plot indicating the number of businesses in each neighborhood
@@ -141,25 +140,24 @@ The second plot illustrates the relationship between the number of Muni stops an
 
 ```{r}
 ##Number of Muni Stops vs Number of Businesses in San Francisco
-plot(busmuni_join$munipoint_count, busmuni_join$point_count,
-    main = "Number of Muni Stops vs Number of Businesses in San Francisco", 
-    cex.main = 1.2,
-    xlab = "Number of Muni Stops", ylab = "Number of Businesses",
-    pch=16, cex=1, col='blue'
-    )
-abline(a= busmuni_join$point_count, b = busmuni_join$munipoint_count, col='red',
-       lwd = 1)
+ggplot(data = values(busmuni_join), aes(x = munipoint_count, y = point_count)) +
+  geom_point() +
+  geom_smooth(method='lm', se=FALSE, color = "steelblue") +
+  theme_minimal() +
+  labs(x = 'Number of MUNI Stops', y = 'Number of Businesses',
+       title = 'Number of Muni Stops vs Number of Businesses in San Francisco') +
+  theme(plot.title = element_text(hjust=0.5, size=12, face='bold'))
 ```
-This scatterplot depicts the relationship between the number of Muni stops and the number of businesses. The linear regression line shows a slight positive correlation between Muni stops and businesses. Outliers are present and may have affected the regression line, causing our two variables to be less correlated than they should have been.
 
-```{r}
+
+```{r, fig.height=10, fig.width=16}
 ## Checking for outliers
 par(mfrow=c(1, 2))
 boxplot(busmuni_join$munipoint_count, main="Number of MUNI Stops")
 boxplot(busmuni_join$point_count, main="Number of Businesses")
 ```
 
-```{r}
+```{r, fig.height=10, fig.width=16}
 # Obtain values of outliers
 muniout <- boxplot.stats(busmuni_join$munipoint_count)$out
 busout <- boxplot.stats(busmuni_join$point_count)$out
@@ -184,10 +182,9 @@ linsum
 ```
 ```{r}
 # Obtaining correlation between MUNI Stops and Businesses
-cor(dfclean$munipoint_count, dfclean$point_count)
+correlation = cor(dfclean$munipoint_count, dfclean$point_count)
+correlation
 ```
-
-
 ```{r}
 # Plotting linear relationship between MUNI stops and Businesses
 ggplot(data = dfclean, aes(x = munipoint_count, y = point_count)) +
@@ -198,7 +195,9 @@ ggplot(data = dfclean, aes(x = munipoint_count, y = point_count)) +
        title = 'Linear Regression of MUNI Stops vs. Businesses') +
   theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) +
   geom_text(x = 20, y = 7500, 
-            label = paste0("R2 = ", round(linsum$r.squared, 4)))
+            label = paste0("R2 = ", round(linsum$r.squared, 4))) +
+  geom_text(x = 20, y = 6750, 
+            label = paste0("p = ", round(correlation, 4)))
 ```
 
 
