@@ -59,7 +59,7 @@ muni
 newv <- vect("nhood/geo_export_188f3512-6e48-45bc-ad4c-ef55315e7720.dbf")
 newv
 
-## Counting the amount of businesses in each neighborhood
+## Counting the amount of businesses in each neighborhood (**the line below also takes at least 10 mins to run)
 count <- terra::extract(newv, bisv)
 
 noNAcount <- count %>%
