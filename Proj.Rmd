@@ -214,7 +214,8 @@ unlink("muni", recursive = T)
 unlink("nhood", recursive = T)
 ```
 
-*********Conclusion
+Conclusion
+We found that there is a slight positive correlation between the amount of Muni stops and the number of business in each San Francisco neighborhood. There were some outliers such as the Financial district and Bayview Hunters Point that caused our result to become skewed. Removal of the outliers helped us to gain a more accurate representation of the correlation between our two variables. Possible next steps include analyzing ridership and zoning data along with the data found in this project to see how people move throughout the City of San Francisco during different times of the day and week. This could help determine where and when people travel to areas for activities such as work or entertainment, aiding in a more focused and intentional plan for growth.
 
 References
 Brophy, Jeanne. “2022 Muni Rider Survey.” SFMTA, 6 Feb. 2023, www.sfmta.com/blog/2022-muni-rider-survey. 
