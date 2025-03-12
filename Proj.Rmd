@@ -83,6 +83,13 @@ muni_join <- merge(newv, munistops, by = "nhood")
 busmuni_join <- merge(muni_join, join, by = "nhood")
 
 ```
+Sources
+DataSF MUNI Transit Stop Data provided a shapefile with location data for all Muni Stops.
+
+DataSF Registered Business Locations provided a CSV with the location for all tax-paying businesses in San Francisco. According to DataSF, the data is collected through business registration applications and taxpayer filings.
+ 
+DataSF Analysis Neighborhood provided a shapefile with census data about each of the 41 neighborhoods in San Francisco. 
+
 
 ```{r, fig.height= 16, fig.width= 16}
 ## Plot Muni and Business data
@@ -122,21 +129,21 @@ The second map visualizes the number of Muni stops in each San Francisco neighbo
 ```{r fig.height= 6, fig.width= 16}
 par(mfrow = c(1,2))
 
-##Bar Plot indicating the number of businesses in each neighborhood
+##Bar Plot indicating the proportion of businesses to the total number of businesses in each SF neighborhood
 barplot(height = neighborhood$point_count/sum(neighborhood$point_count), names.arg = neighborhood$nhood,
-  main = "Number of Businesses in Each SF Neighborhood",
-  xlab = "Neighborhood", ylab = "Number of Businesses",
+  main = "Proportion of Businesses in Each SF Neighborhood",
+  xlab = "Neighborhood", ylab = "Businesses",
   col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
 
-##Bar Plot indicating the number of Muni stops in each neighborhood
+##Bar Plot indicating the proportion of Muni stops to the total number of Muni stops in each neighborhood
 barplot(height = munistops$munipoint_count/sum(munistops$munipoint_count), names.arg = munistops$nhood,
-  main = "Number of Muni Stops in Each SF Neighborhood",
-  xlab = "Neighborhood", ylab = "Number of Muni Stops",
+  main = "Proportion of Muni Stops in Each SF Neighborhood",
+  xlab = "Neighborhood", ylab = "Muni Stops",
   col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
 ```
-The first plot illustrates the relationship between the number of businesses and neighborhoods in San Francisco. The majority of businesses are located in the financial district as it is the center of finance and corporate headquarters. This district was established as a financial center during the Gold Rush and continues to expand today with the rise in countless skyscrapers to increase the density of businesses in the area. 
+The first plot illustrates the relationship between the proportion of businesses to the total businesses and neighborhoods in San Francisco. The majority of businesses are located in the financial district as it is the center of finance and corporate headquarters. This district was established as a financial center during the Gold Rush and continues to expand today with the rise in countless skyscrapers to increase the density of businesses in the area. 
 
-The second plot illustrates the relationship between the number of Muni stops and neighborhoods in San Francisco. The least amount of Muni stops are located in the Lincoln Park and Sea Cliff District. The lack of Muni stops in the Lincoln Park district may be because a majority of the land is dedicated for parkland and recreational use. Therefore, there is a lack of roads and Muni stops located in this district. Sea Cliff also has minimal Muni stops as this district is smaller in area and known for its elaborate homes. Most of the people who reside in this district have their own vehicles, reducing their reliance on public transportation. On the other hand, Bayview has the most Muni stops. This may be because it is one of the largest districts in area, but it is historically an underserved area. The community there may lack the resources to have personal transportation, and therefore are heavily reliant on public transportation. Due to the high demand in Bayview, there are more Muni stops to improve connectivity. 
+The second plot illustrates the relationship between the proportion of Muni stops to the total businesses and neighborhoods in San Francisco. The least amount of Muni stops are located in the Lincoln Park and Sea Cliff District. The lack of Muni stops in the Lincoln Park district may be because a majority of the land is dedicated for parkland and recreational use. Therefore, there is a lack of roads and Muni stops located in this district. Sea Cliff also has minimal Muni stops as this district is smaller in area and known for its elaborate homes. Most of the people who reside in this district have their own vehicles, reducing their reliance on public transportation. On the other hand, Bayview has the most Muni stops. This may be because it is one of the largest districts in area, but it is historically an underserved area. The community there may lack the resources to have personal transportation, and therefore are heavily reliant on public transportation. Due to the high demand in Bayview, there are more Muni stops to improve connectivity. 
 
 ```{r}
 ##Number of Muni Stops vs Number of Businesses in San Francisco
