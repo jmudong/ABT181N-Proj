@@ -81,7 +81,6 @@ munistops <- muni_count%>%
 muni_join <- merge(newv, munistops, by = "nhood")
 
 busmuni_join <- merge(muni_join, join, by = "nhood")
-
 ```
 Sources
 DataSF MUNI Transit Stop Data provided a shapefile with location data for all Muni Stops.
@@ -133,13 +132,13 @@ par(mfrow = c(1,2))
 barplot(height = neighborhood$point_count/sum(neighborhood$point_count), names.arg = neighborhood$nhood,
   main = "Proportion of Businesses in Each SF Neighborhood",
   xlab = "Neighborhood", ylab = "Businesses",
-  col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
+  col = "navy", cex.names =0.4, las = 2, cex.axis = 0.7)
 
 ##Bar Plot indicating the proportion of Muni stops to the total number of Muni stops in each neighborhood
 barplot(height = munistops$munipoint_count/sum(munistops$munipoint_count), names.arg = munistops$nhood,
   main = "Proportion of Muni Stops in Each SF Neighborhood",
   xlab = "Neighborhood", ylab = "Muni Stops",
-  col = "navy", cex.names =0.35, las = 2, cex.axis = 0.7)
+  col = "navy", cex.names =0.4, las = 2, cex.axis = 0.7)
 ```
 The first plot illustrates the relationship between the proportion of businesses to the total businesses and neighborhoods in San Francisco. The majority of businesses are located in the financial district as it is the center of finance and corporate headquarters. This district was established as a financial center during the Gold Rush and continues to expand today with the rise in countless skyscrapers to increase the density of businesses in the area. 
 
