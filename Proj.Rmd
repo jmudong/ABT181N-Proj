@@ -82,6 +82,17 @@ muni_join <- merge(newv, munistops, by = "nhood")
 
 busmuni_join <- merge(muni_join, join, by = "nhood")
 ```
+```{r}
+# Converting count data to proportion data
+join$prop <- join$point_count/sum(join$point_count)
+
+muni_join$prop <- muni_join$munipoint_count/sum(muni_join$munipoint_count)
+
+join
+muni_join
+```
+
+
 Sources
 DataSF MUNI Transit Stop Data provided a shapefile with location data for all Muni Stops.
 
@@ -104,7 +115,7 @@ Purple <- RColorBrewer::brewer.pal(n=9, name ="Purples")
 colors1 = colorRampPalette(c("#EFEDF5", "#54278F"))
 
 ## Businesses in Each Neighborhood Map
-plot(join, "point_count", breaks= 10, col = colors(10), background = "lightblue", 
+plot(join, "prop", breaks= 10, col = colors(10), background = "lightblue", 
      main= "Businesses in SF Neighborhoods", axes=FALSE, cex.main = 1.7)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
@@ -113,7 +124,7 @@ sbar(5, xy=c(-122.5,37.824), type="line", divs=2, labels=c(0,500,1000),
    scaleby=100, lonlat=NULL, cex=0.8, below = "km")
 
 ## Muni Stops in Each Neighborhood Map
-plot(muni_join, "munipoint_count", breaks = 10, col = colors1(10), background = "lightblue", 
+plot(muni_join, "prop", breaks = 10, col = colors1(10), background = "lightblue", 
      main= "Muni Stops in SF Neighborhoods", axes=FALSE, cex.main = 1.7)
 text(x=-122.435, y=37.7072, "ABT 181N Jasper Dong & Tosca Wong", col = "black", cex=0.25)
 lines(newv, col="black")
@@ -146,7 +157,10 @@ The second plot illustrates the relationship between the proportion of Muni stop
 
 ```{r}
 ##Number of Muni Stops vs Number of Businesses in San Francisco
-ggplot(data = values(busmuni_join), aes(x = munipoint_count, y = point_count)) +
+busmuni_join$muniprop <- busmuni_join$munipoint_count/sum(busmuni_join$munipoint_count)
+busmuni_join$pointprop <- busmuni_join$point_count/sum(busmuni_join$point_count)
+
+ggplot(data = values(busmuni_join), aes(x = muniprop, y = pointprop)) +
   geom_point() +
   geom_smooth(method='lm', se=FALSE, color = "steelblue") +
   theme_minimal() +
@@ -159,59 +173,57 @@ ggplot(data = values(busmuni_join), aes(x = munipoint_count, y = point_count)) +
 ```{r, fig.height=10, fig.width=16}
 ## Checking for outliers
 par(mfrow=c(1, 2))
-boxplot(busmuni_join$munipoint_count, main="Number of MUNI Stops")
-boxplot(busmuni_join$point_count, main="Number of Businesses")
+boxplot(busmuni_join$muniprop, main="Proportion of MUNI Stops", 
+        outcex = 2.5, outpch = 4)
+boxplot(busmuni_join$pointprop, main="Proportion of Businesses", 
+        outcex = 2.5, outpch = 4)
 ```
 
 ```{r, fig.height=10, fig.width=16}
 # Obtain values of outliers
-muniout <- boxplot.stats(busmuni_join$munipoint_count)$out
-busout <- boxplot.stats(busmuni_join$point_count)$out
+muniout <- boxplot.stats(busmuni_join$muniprop)$out
+busout <- boxplot.stats(busmuni_join$pointprop)$out
 # Obtaining indices
-muniout_idx <- which(busmuni_join$munipoint_count %in% muniout)
-busout_idx <- which(busmuni_join$point_count %in% busout)
+muniout_idx <- which(busmuni_join$muniprop %in% muniout)
+busout_idx <- which(busmuni_join$pointprop %in% busout)
 outidx <- c(muniout_idx, busout_idx)
 # Removing outliers
 df <- values(busmuni_join)
 dfclean <- df[-outidx, ]
 # Re-plotting boxplots
 par(mfrow=c(1, 2))
-boxplot(dfclean$munipoint_count, main="Number of MUNI Stops")
-boxplot(dfclean$point_count, main="Number of Businesses")
+boxplot(dfclean$muniprop, main="Proportion of MUNI Stops")
+boxplot(dfclean$pointprop, main="Proportion of Businesses")
 ```
 
 ```{r}
 # Fitting linear regression model
-lin <- lm(point_count ~ munipoint_count, data=dfclean) 
+lin <- lm(pointprop ~ muniprop, data=dfclean) 
 linsum <- summary(lin)
 linsum
 ```
 ```{r}
 # Obtaining correlation between MUNI Stops and Businesses
-correlation = cor(dfclean$munipoint_count, dfclean$point_count)
+correlation = cor(dfclean$muniprop, dfclean$pointprop)
 correlation
 ```
 ```{r}
 # Plotting linear relationship between MUNI stops and Businesses
-ggplot(data = dfclean, aes(x = munipoint_count, y = point_count)) +
+ggplot(data = dfclean, aes(x = muniprop, y = pointprop)) +
   geom_point() +
   geom_smooth(method='lm', se=FALSE, color = "steelblue") +
   theme_minimal() +
-  labs(x = 'Number of MUNI Stops', y = 'Number of Businesses',
+  labs(x = 'Proportion of MUNI Stops', y = 'Proportion of Businesses',
        title = 'Linear Regression of MUNI Stops vs. Businesses') +
   theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) +
-  geom_text(x = 20, y = 7500, 
-            label = paste0("R2 = ", round(linsum$r.squared, 4))) +
-  geom_text(x = 20, y = 6750, 
-            label = paste0("p = ", round(correlation, 4)))
+  geom_text(x = 0.0075, y = 0.03, 
+            label = paste0("R^2 = ", round(linsum$r.squared, 4))) +
+  geom_text(x = 0.0083, y = 0.028, 
+            label = paste0("r = ", round(correlation, 4)))
 ```
 
 
 ********Discussion
-
-
-
-
 ```{r}
 ##### RUN THIS BEFORE PUSHING TO GITHUB
 ##### TO AVOID ACCIDENTALLY SENDING BIG FILES
