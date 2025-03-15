@@ -183,6 +183,15 @@ par(mfrow=c(1, 2))
 boxplot(dfclean$muniprop, main="Proportion of MUNI Stops")
 boxplot(dfclean$pointprop, main="Proportion of Businesses")
 ```
+```{r, fig.height=5, fig.width=12}
+# Plotting histograms
+par(mfrow=c(1,2))
+
+hist(busmuni_join$muniprop, main = "Histogram of Proportions of MUNI Stops",
+     xlab = "Proportion of MUNI Stops")
+hist(busmuni_join$pointprop, main = "Histogram of Proportions of Businesses",
+     xlab = "Proportion of Businesses")
+```
 
 ```{r}
 # Fitting linear regression model
