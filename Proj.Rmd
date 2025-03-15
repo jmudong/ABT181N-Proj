@@ -287,17 +287,6 @@ multilin.sum <- summary(multilin)
 multilin.sum
 ```
 
-```{r}
-# Plotting linear relationship between MUNI stops and Businesses
-ggplot(data = dfclean, aes(x = muniprop, y = pointprop)) +
-  geom_point() +
-  geom_smooth(method='lm', se=FALSE, color = "steelblue") +
-  theme_minimal() +
-  labs(x = 'Proportion of MUNI Stops', y = 'Proportion of Businesses',
-       title = 'Linear Regression of MUNI Stops vs. Businesses') +
-  theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) 
-```
-
 
 ********Discussion
 ```{r}
