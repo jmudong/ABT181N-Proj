@@ -268,11 +268,11 @@ head(dfrace.clean)
 ```
 
 ```{r}
-multilin <- lm(pointprop ~ muniprop + native + asian + black +
+library(randomForest)
+modelRF <- randomForest(pointprop ~ muniprop + native + asian + black +
                  hisp + pi + white, data = dfrace.clean)
 
-multilin.sum <- summary(multilin)
-multilin.sum
+modelRF
 ```
 
 
