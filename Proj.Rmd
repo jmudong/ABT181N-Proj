@@ -170,7 +170,7 @@ ggplot(data = values(busmuni_join), aes(x = muniprop, y = pointprop)) +
 ```
 
 
-```{r, fig.height=10, fig.width=16}
+```{r, fig.height=10, fig.width=6}
 ## Checking for outliers
 par(mfrow=c(1, 2))
 boxplot(busmuni_join$muniprop, main="Proportion of MUNI Stops", 
