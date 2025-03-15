@@ -155,31 +155,19 @@ The first plot illustrates the relationship between the proportion of businesses
 
 The second plot illustrates the relationship between the proportion of Muni stops to the total businesses and neighborhoods in San Francisco. The least amount of Muni stops are located in the Lincoln Park and Sea Cliff District. The lack of Muni stops in the Lincoln Park district may be because a majority of the land is dedicated for parkland and recreational use. Therefore, there is a lack of roads and Muni stops located in this district. Sea Cliff also has minimal Muni stops as this district is smaller in area and known for its elaborate homes. Most of the people who reside in this district have their own vehicles, reducing their reliance on public transportation. On the other hand, Bayview has the most Muni stops. This may be because it is one of the largest districts in area, but it is historically an underserved area. The community there may lack the resources to have personal transportation, and therefore are heavily reliant on public transportation. Due to the high demand in Bayview, there are more Muni stops to improve connectivity. 
 
-```{r}
-##Number of Muni Stops vs Number of Businesses in San Francisco
-busmuni_join$muniprop <- busmuni_join$munipoint_count/sum(busmuni_join$munipoint_count)
-busmuni_join$pointprop <- busmuni_join$point_count/sum(busmuni_join$point_count)
-
-ggplot(data = values(busmuni_join), aes(x = muniprop, y = pointprop)) +
-  geom_point() +
-  geom_smooth(method='lm', se=FALSE, color = "steelblue") +
-  theme_minimal() +
-  labs(x = 'Number of MUNI Stops', y = 'Number of Businesses',
-       title = 'Number of Muni Stops vs Number of Businesses in San Francisco') +
-  theme(plot.title = element_text(hjust=0.5, size=12, face='bold'))
-```
-
 
 ```{r, fig.height=10, fig.width=6}
 ## Checking for outliers
 par(mfrow=c(1, 2))
-boxplot(busmuni_join$muniprop, main="Proportion of MUNI Stops", 
+boxplot(muni_join$prop, main="Proportion of MUNI Stops", 
         outcex = 2.5, outpch = 4)
-boxplot(busmuni_join$pointprop, main="Proportion of Businesses", 
+boxplot(join$prop, main="Proportion of Businesses", 
         outcex = 2.5, outpch = 4)
 ```
 
-```{r, fig.height=10, fig.width=16}
+```{r, fig.height=10, fig.width=6}
+busmuni_join$muniprop <- busmuni_join$munipoint_count/sum(busmuni_join$munipoint_count)
+busmuni_join$pointprop <- busmuni_join$point_count/sum(busmuni_join$point_count)
 # Obtain values of outliers
 muniout <- boxplot.stats(busmuni_join$muniprop)$out
 busout <- boxplot.stats(busmuni_join$pointprop)$out
