@@ -221,6 +221,57 @@ ggplot(data = dfclean, aes(x = muniprop, y = pointprop)) +
   geom_text(x = 0.0083, y = 0.028, 
             label = paste0("r = ", round(correlation, 4)))
 ```
+```{r, message = F}
+# Reading in demographic data
+demo <- read_csv("Demo.csv")
+# Filtering by race and time categories
+demo <- demo[which(demo$demographic_category == "race"),]
+demo <- demo[which(demo$end_year == 2023),]
+# Selecting variables of interest
+democlean <- demo |> 
+  select(all_of(c("geography_name",
+                  "demographic_category_label", 
+                  "estimate")))
+colnames(democlean)[1] <- "nhood"
+# Obtaining unique race groups
+racelab <- sort(unique(democlean$demographic_category_label))
+racelab
+```
+
+
+```{r}
+# Splitting data frame into separate race groups
+splitrace <- split(democlean, democlean$demographic_category_label)
+# Dropping unnecessary categories
+splitrace <- splitrace[-c(6, 7)] 
+# Obtaining estimate counts
+## Selecting count data and coercing into data frame
+racecount <- lapply(splitrace, function(x){x |> select("estimate")})
+names(racecount) <- c("native", "asian", "black", "hisp", "pi", "white")
+race <- as.data.frame(mapply(cbind, racecount))
+## Calculating total population counts for each nhood
+race$total <- rowSums(race)
+race$nhood <- splitrace[[1]]$nhood
+## Turning counts into proportions by each nhood
+race[,1:6] = round(race[,1:6]/race$total, 4)
+colnames(race)[1:6] <- names(racecount)
+head(race)
+```
+
+```{r}
+# Merging into SpatVector
+demo.join <- merge(busmuni_join, race, by = "nhood")
+demo.join
+```
+
+```{r}
+dfrace = values(demo.join)
+multilin <- lm(pointprop ~ muniprop + native + asian +
+                 black + hisp + pi + white, 
+               data=values(demo.join)) 
+summary(multilin)
+```
+
 
 
 ********Discussion
