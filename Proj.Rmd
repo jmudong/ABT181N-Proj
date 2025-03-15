@@ -265,13 +265,38 @@ demo.join
 ```
 
 ```{r}
+# Turning into data frame
 dfrace = values(demo.join)
-multilin <- lm(pointprop ~ muniprop + native + asian +
-                 black + hisp + pi + white, 
-               data=values(demo.join)) 
-summary(multilin)
+# Removing previous outliers
+outidxcomb <- c()
+for(i in 4:11){
+  out <- boxplot.stats(dfrace[,i])$out
+  outidx <- which(dfrace[,i] %in% out)
+  outidxcomb <- c(outidxcomb, outidx)
+}
+
+dfrace.clean <- dfrace[-unique(outidxcomb), ]
+head(dfrace.clean)
 ```
 
+```{r}
+multilin <- lm(pointprop ~ muniprop + native + asian + black +
+                 hisp + pi + white, data = dfrace.clean)
+
+multilin.sum <- summary(multilin)
+multilin.sum
+```
+
+```{r}
+# Plotting linear relationship between MUNI stops and Businesses
+ggplot(data = dfclean, aes(x = muniprop, y = pointprop)) +
+  geom_point() +
+  geom_smooth(method='lm', se=FALSE, color = "steelblue") +
+  theme_minimal() +
+  labs(x = 'Proportion of MUNI Stops', y = 'Proportion of Businesses',
+       title = 'Linear Regression of MUNI Stops vs. Businesses') +
+  theme(plot.title = element_text(hjust=0.5, size=12, face='bold')) 
+```
 
 
 ********Discussion
