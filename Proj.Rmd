@@ -6,6 +6,7 @@ date: "2025-02-12"
 Jasper Dong and Tosca Wong
 
 I. Introduction
+
 San Francisco is a highly concentrated city with a population of 808,988 people. This city, constructed on a 46.9 square mile area of land, is notorious for its constantly congested highways and traffic. Therefore, instead of driving, people often use public transportation to commute from one place to another. The San Francisco Municipal Railway (MUNI), composed of light rail, cable cars, buses, and streetcars,  is a widely popular mode of public transportation in San Francisco. 
 
 The overarching goal of our project is to analyze the relationship between the presence of San Francisco Municipal Railway (MUNI) and the location of businesses throughout San Francisco. The goal of this report is to explore where relationships between economic growth/decline and MUNI stops exist, and which neighborhoods this relationship is the most prominent in. According to the 2022 MUNI Rider Survey, one third of MUNI riders use MUNI to travel to and from various businesses. Increased traffic in certain neighborhoods due to increases in business, could result in the need for more MUNI stops in neighborhoods to relieve traffic congestion. According to the Transit Economic Benefits Study, the highest amount of MUNI ridership occurs in neighborhoods of high congestion. The purpose of this report is to observe which neighborhoods have the most MUNI stops and analyze them for any correlation with the number of businesses established in the neighborhood.
@@ -28,6 +29,12 @@ dir.create("nhood", showWarnings = FALSE)
 unzip("MUNI.zip", exdir="muni")
 unzip("nhood.zip", exdir="nhood")
 ```
+
+II. Data Summary
+
+Our data sources come from DataSF, which is San Francisco’s official open data portal, collected internally from various government offices. Data sources included are MUNI Stops for mapping MUNI transit points, Registered Business Locations for mapping existing businesses, and Analysis Neighborhoods for obtaining neighborhood boundaries. The San Francisco Population and Demographic Census Data is also included later in this report, for further analysis and discussion.
+
+Exploratory analysis includes mapping of registered business data and transit stop data on a neighborhood-wise basis. The R package “terra” is used to extract counts of transit stops and businesses respectively inside each predefined neighborhood boundary. The resulting count data is then scaled down by transforming them into proportional data with respect to the entire San Francisco population, in order to account for the effects of high variance in each variable.
 
 
 ```{r}
@@ -91,15 +98,6 @@ join
 muni_join
 ```
 
-
-Sources
-DataSF MUNI Transit Stop Data provided a shapefile with location data for all Muni Stops.
-
-DataSF Registered Business Locations provided a CSV with the location for all tax-paying businesses in San Francisco. According to DataSF, the data is collected through business registration applications and taxpayer filings.
- 
-DataSF Analysis Neighborhood provided a shapefile with census data about each of the 41 neighborhoods in San Francisco. 
-
-
 ```{r, fig.height= 16, fig.width= 16}
 ## Plot Muni and Business data
 
@@ -131,9 +129,8 @@ north(xy= "topleft", type=2, cex= 1.2)
 sbar(5, xy=c(-122.5,37.824), type="line", divs=2, labels=c(0,500,1000), 
    scaleby=100, lonlat=NULL, cex=0.8, below = "km")
 ```
-The first map visualizes the number of businesses in each San Francisco neighborhood. Neighborhoods with fewer businesses are represented in yellow, while higher numbers of businesses are represented in red. There is a high concentration of businesses in the northwest quadrant of San Francisco.
 
-The second map visualizes the number of Muni stops in each San Francisco neighborhood. Neighborhoods with fewer businesses are represented in light purple, while higher numbers of businesses are represented in dark purple. There is a high concentration of Muni Stops in the southwest quadrant of San Francisco.
+We observe that a majority of registered businesses are located in the northwest corner of San Francisco, while a majority of transit stops are located in the southwest corner of San Francisco. Barplots of the distributions of each of our variables shows that the Financial District holds a majority of businesses. Neighborhoods that hold the most proportion of transit stops are primarily residential areas, such as Bayview and West of Twin Peaks. Neighborhoods with the lowest proportion of MUNI stops include Lincoln Park and Sea Cliff.
 
 ```{r fig.height= 6, fig.width= 16}
 par(mfrow = c(1,2))
@@ -150,10 +147,10 @@ barplot(height = munistops$munipoint_count/sum(munistops$munipoint_count), names
   xlab = "Neighborhood", ylab = "Muni Stops",
   col = "navy", cex.names =0.4, las = 2, cex.axis = 0.7)
 ```
-The first plot illustrates the relationship between the proportion of businesses to the total businesses and neighborhoods in San Francisco. The majority of businesses are located in the financial district as it is the center of finance and corporate headquarters. This district was established as a financial center during the Gold Rush and continues to expand today with the rise in countless skyscrapers to increase the density of businesses in the area. 
 
-The second plot illustrates the relationship between the proportion of Muni stops to the total businesses and neighborhoods in San Francisco. The least amount of Muni stops are located in the Lincoln Park and Sea Cliff District. The lack of Muni stops in the Lincoln Park district may be because a majority of the land is dedicated for parkland and recreational use. Therefore, there is a lack of roads and Muni stops located in this district. Sea Cliff also has minimal Muni stops as this district is smaller in area and known for its elaborate homes. Most of the people who reside in this district have their own vehicles, reducing their reliance on public transportation. On the other hand, Bayview has the most Muni stops. This may be because it is one of the largest districts in area, but it is historically an underserved area. The community there may lack the resources to have personal transportation, and therefore are heavily reliant on public transportation. Due to the high demand in Bayview, there are more Muni stops to improve connectivity. 
+III. Analysis
 
+To prepare our data for modeling, potential outliers that can heavily influence our results are identified by creating boxplots for each of our variables of interest, as shown in Fig. 3. The boxplots identify three outliers for each of our variables. Outliers that belong to the MUNI Stop variable are the neighborhoods West of Twin Peaks, Sunset/Parkside, and Bayview Hunters Point, which are all residential neighborhoods. Outliers belonging to the Business variable are the neighborhoods South of Market (SoMa), Mission, and the Financial District, which are all primarily commercial areas. 
 
 ```{r, fig.height=10, fig.width=6}
 ## Checking for outliers
@@ -182,6 +179,9 @@ par(mfrow=c(1, 2))
 boxplot(dfclean$muniprop, main="Proportion of MUNI Stops")
 boxplot(dfclean$pointprop, main="Proportion of Businesses")
 ```
+
+The resulting boxplots after removal of potential outliers show a fairly symmetrical distribution of each variable of interest, with no presence of further outliers. A closer look at the distributions of MUNI Stops and Businesses are shown through histograms of each of the variables. Distributions of both variables are shown to be unimodal and right-skewed, indicating that assumptions of normality may be violated.
+
 ```{r, fig.height=5, fig.width=12}
 # Plotting histograms
 par(mfrow=c(1,2))
@@ -191,6 +191,8 @@ hist(busmuni_join$muniprop, main = "Histogram of Proportions of MUNI Stops",
 hist(busmuni_join$pointprop, main = "Histogram of Proportions of Businesses",
      xlab = "Proportion of Businesses")
 ```
+
+A simple linear regression model is fitted between the two variables, with MUNI Stops being used as the independent variable and Businesses being used as the dependent variable. A visualization of the fitted regression model is shown, along with numerical summaries.
 
 ```{r}
 # Fitting linear regression model
@@ -217,6 +219,14 @@ ggplot(data = dfclean, aes(x = muniprop, y = pointprop)) +
   geom_text(x = 0.0083, y = 0.028, 
             label = paste0("r = ", round(correlation, 4)))
 ```
+
+The fitted regression model gives a correlation coefficient of r = 0.6363 and a coefficient of determination of R2 = 0.4048. These results imply that there is an existing positive relationship between MUNI Stops and Businesses, yet this relationship is fairly weak and may not be linear. This can mean that while a positive relationship exists between the two variables, MUNI Stops may not be a good predictor for Businesses. Another interpretation could be that the relationship between MUNI Stops and Businesses may be spurious - in other words, they may be associated but not by a casual relationship. There may be other variables along with MUNI Stops that may better help explain the variation in Businesses, which are further explored in the following section.
+
+IV. Discussion
+
+To further explore the possibility that additional variables - along with MUNI Stops - may help better explain the variability present in Businesses, this report will include demographic data from DataSF’s San Francisco Population and Demographic Census Data into our analysis. This analysis will include race variables of each neighborhood along with the MUNI Stop data. As this analysis is not within the original scope of this report, detailed analysis will be avoided.
+
+The data pre-processing steps for these race variables will remain similar to our initial pre-processing, with the exception that proportional measurements will be respective to neighborhood populations instead of to the entire San Francisco population. Six race variables are used in the analysis, which include data on Native American, Asian, Black, Hispanic, Pacific Islander, and White populations. A multiple linear regression model is fitted between the race variables and the MUNI Stops variable against the Businesses variable. The fitted model found a resulting adjusted R2 = 0.4483, which is a marginal increase compared to the earlier fitted simple linear regression model. This implies that although adding the race variables does have an additional positive effect on explaining the variation present in the Businesses variable, the modeled relationship is still a fairly weak one.
 ```{r, message = F}
 # Reading in demographic data
 demo <- read_csv("Demo.csv")
@@ -233,8 +243,6 @@ colnames(democlean)[1] <- "nhood"
 racelab <- sort(unique(democlean$demographic_category_label))
 racelab
 ```
-
-
 ```{r}
 # Splitting data frame into separate race groups
 splitrace <- split(democlean, democlean$demographic_category_label)
@@ -253,13 +261,11 @@ race[,1:6] = round(race[,1:6]/race$total, 4)
 colnames(race)[1:6] <- names(racecount)
 head(race)
 ```
-
 ```{r}
 # Merging into SpatVector
 demo.join <- merge(busmuni_join, race, by = "nhood")
 demo.join
 ```
-
 ```{r}
 # Turning into data frame
 dfrace = values(demo.join)
@@ -274,7 +280,6 @@ for(i in 4:11){
 dfrace.clean <- dfrace[-unique(outidxcomb), ]
 head(dfrace.clean)
 ```
-
 ```{r}
 multilin <- lm(pointprop ~ muniprop + native + asian + black +
                  hisp + pi + white, data = dfrace.clean)
@@ -283,10 +288,7 @@ multilin.sum <- summary(multilin)
 multilin.sum
 ```
 
-
-
-********Discussion
-```{r}
+```{r, echo = FALSE}
 ##### RUN THIS BEFORE PUSHING TO GITHUB
 ##### TO AVOID ACCIDENTALLY SENDING BIG FILES
 file.remove("Registered_Business_Locations_-_San_Francisco_20250212.csv")
@@ -294,8 +296,16 @@ unlink("muni", recursive = T)
 unlink("nhood", recursive = T)
 ```
 
-Conclusion
-We found that there is a slight positive correlation between the amount of Muni stops and the number of business in each San Francisco neighborhood. There were some outliers such as the Financial district and Bayview Hunters Point that caused our result to become skewed. Removal of the outliers helped us to gain a more accurate representation of the correlation between our two variables. Possible next steps include analyzing ridership and zoning data along with the data found in this project to see how people move throughout the City of San Francisco during different times of the day and week. This could help determine where and when people travel to areas for activities such as work or entertainment, aiding in a more focused and intentional plan for growth.
+V. Conclusion
+
+The goal of this report was to find if there was a relationship between the proportion of MUNI stops and the proportion of businesses on a neighborhood-wise basis in San Francisco. Although the methods used did find a positive relationship between the two variables, the relationship is fairly weak and may not be linear.
+
+Many limitations were faced in this report, including a potential violation of assumptions for the models used. The distributions of the original data saw a skewed distribution, which meant that the normal distribution assumption for the simple linear regression model could have been violated. Although the later multiple linear regression model is outside of the scope of the original report, this violation could have further extended to the fitted model. A non-parametric regression model, such as a regression tree or a Random Forest model, may have been a better choice for modeling our data. Exploring these methods would require much further analysis beyond the scope of this report.
+
+Additionally, the choice for data may not have been ideal. The MUNI Stops variable and Businesses variable could potentially not have been good proxies for transit rates or local economic health. Better choice of variables, such as changes in ridership rates or changes in income, may be more accurate in analyzing the relationship that motivated this report. Analyzing the relationship on the basis of variables that change over time would require an analysis that uses completely different methods, such as a time series analysis. Further analysis can be done through the use of zoning data, as businesses tend to be concentrated in areas of commercial or mixed use zoning, while transit stops may be concentrated in areas zoned for residential use. 
+
+Overall, although the analysis conducted in this report was relatively simple, the results are still meaningful enough to motivate future analysis. The relationship that was found between the two variables was not completely non-existent, and although the relationship may be spurious, it could mean that there are other factors that can help associate the correlation between the two variables. As we saw with our further analysis of adding in race variables, this could require the consideration of many different factors in order to effectively capture the complex relationship between transit stops and local economic health. 
+
 
 References
 Brophy, Jeanne. “2022 Muni Rider Survey.” SFMTA, 6 Feb. 2023, www.sfmta.com/blog/2022-muni-rider-survey. 
