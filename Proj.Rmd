@@ -5,14 +5,13 @@ date: "2025-02-12"
 ---
 Jasper Dong and Tosca Wong
 
-Question: What is the correlation between the number of businesses and Muni stops in San Francisco?
+I. Introduction
+San Francisco is a highly concentrated city with a population of 808,988 people. This city, constructed on a 46.9 square mile area of land, is notorious for its constantly congested highways and traffic. Therefore, instead of driving, people often use public transportation to commute from one place to another. The San Francisco Municipal Railway (MUNI), composed of light rail, cable cars, buses, and streetcars,  is a widely popular mode of public transportation in San Francisco. 
 
-San Francisco is a highly concentrated city with a population of 808,988 people. This city, constructed on a 46.9 square mile area of land, is notorious for its constantly congested highways and traffic. Therefore, instead of driving, people often use public transportation to commute from one place to another. The San Francisco Municipal Railway (Muni) is a widely popular mode of public transportation in San Francisco. Muni is run by the San Francisco Municipal Transportation Agency and is composed of light rail, cable cars, buses, and streetcars. 
+The overarching goal of our project is to analyze the relationship between the presence of San Francisco Municipal Railway (MUNI) and the location of businesses throughout San Francisco. The goal of this report is to explore where relationships between economic growth/decline and MUNI stops exist, and which neighborhoods this relationship is the most prominent in. According to the 2022 MUNI Rider Survey, one third of MUNI riders use MUNI to travel to and from various businesses. Increased traffic in certain neighborhoods due to increases in business, could result in the need for more MUNI stops in neighborhoods to relieve traffic congestion. According to the Transit Economic Benefits Study, the highest amount of MUNI ridership occurs in neighborhoods of high congestion. The purpose of this report is to observe which neighborhoods have the most MUNI stops and analyze them for any correlation with the number of businesses established in the neighborhood.
 
-The overarching goal of our project is to analyze the relationship between presence of San Francisco Municipal Railway (MUNI) and location of businesses throughout San Francisco. We want to see where relationships between economic growth/decline and MUNI stops exist, and which neighborhoods this relationship is the most prominent in. According to the 2022 Muni Rider Survey, one third of Muni riders use Muni to travel to and from various businesses. Increased traffic in certain neighborhoods due to increases in business, could result in the need for more Muni stops in neighborhoods to relieve traffic congestion. According to the Transit Economic Benefits Study, the highest amount of Muni ridership occurs in neighborhoods of high congestion. We want to see which neighborhoods have the most Muni stops and analyze them for any correlation with the number of businesses established in the neighborhood.
+Research Question: Is there a relationship between the number of businesses and MUNI stops in San Francisco for each neighborhood?
 
-***********Description of the dataset and exploratory data analysis (variable distribution, correlation etc),
-(2 different plots and/or tables plus 3-4 paragraphs)
 
 ```{r}
 ## Load packages
