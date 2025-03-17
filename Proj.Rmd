@@ -24,10 +24,6 @@ library(ggplot2)
 ```{r}
 ## Unzipping files
 unzip("Data(ABT181).zip")
-##dir.create("muni", showWarnings = FALSE)
-##dir.create("nhood", showWarnings = FALSE)
-##unzip("MUNI.zip", exdir="muni")
-##unzip("nhood.zip", exdir="nhood")
 ```
 
 II. Data Summary
@@ -58,11 +54,11 @@ bisv <- vect(bis_lonlat, geom = c("lon", "lat"))
 
 ```{r}
 ## Vectorize Muni data
-muni<- vect("muni/geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
+muni<- vect("geo_export_7a61b6cd-add6-411a-bdc0-6a4be0880140.dbf")
 muni
 
 ## Vectorize San Fransico Neighborhood Data
-newv <- vect("nhood/geo_export_188f3512-6e48-45bc-ad4c-ef55315e7720.dbf")
+newv <- vect("geo_export_188f3512-6e48-45bc-ad4c-ef55315e7720.dbf")
 newv
 
 ## Counting the amount of businesses in each neighborhood (**the line below also takes at least 10 mins to run)
@@ -286,14 +282,6 @@ multilin <- lm(pointprop ~ muniprop + native + asian + black +
 
 multilin.sum <- summary(multilin)
 multilin.sum
-```
-
-```{r, echo = FALSE}
-##### RUN THIS BEFORE PUSHING TO GITHUB
-##### TO AVOID ACCIDENTALLY SENDING BIG FILES
-file.remove("Registered_Business_Locations_-_San_Francisco_20250212.csv")
-unlink("muni", recursive = T)
-unlink("nhood", recursive = T)
 ```
 
 V. Conclusion
